@@ -1,0 +1,22 @@
+#version 420 core
+
+in vec3 vPos; //local
+in vec3 vNorm; //already normilized
+
+uniform mat4 proj_view_matrix;
+uniform mat4 model_matrix;
+
+out vec3 param_world_normal;
+out vec3 param_world_pos;
+
+void main(void)
+{
+	//vertex position in world space
+	vec4 world_pos = model_matrix * vec4(vPos, 1.0f);
+	param_world_pos = vec3 (world_pos) / world_pos.w;
+	
+	param_world_normal = mat3 (model_matrix) * vNorm;
+	
+	//multiply view-projection transform with position matrix 
+	gl_Position = proj_view_matrix *  world_pos ; //vertex position in screen coordinates
+}
